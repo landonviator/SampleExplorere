@@ -487,6 +487,9 @@
     <ClCompile Include="..\..\Source\GUI\Components\FileListComp.cpp">
       <Filter>SampleExplorer\Source\GUI\Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\GUI\Components\SamplePlayerComp.cpp">
+      <Filter>SampleExplorer\Source\GUI\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\GUI\LookAndFeel\FileBrowserLAF.cpp">
       <Filter>SampleExplorer\Source\GUI\LookAndFeel</Filter>
     </ClCompile>
@@ -2779,6 +2782,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GUI\Components\FileListComp.h">
+      <Filter>SampleExplorer\Source\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GUI\Components\SamplePlayerComp.h">
       <Filter>SampleExplorer\Source\GUI\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\GUI\LookAndFeel\FileBrowserLAF.h">

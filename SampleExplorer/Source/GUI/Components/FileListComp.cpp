@@ -30,7 +30,7 @@ FileListComp::~FileListComp()
 
 void FileListComp::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::whitesmoke.withAlpha(0.25f));   // clear the background
+    g.fillAll (juce::Colours::black.brighter(0.1));
 }
 
 void FileListComp::resized()

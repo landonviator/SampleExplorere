@@ -14,6 +14,7 @@ SampleExplorerAudioProcessorEditor::SampleExplorerAudioProcessorEditor (SampleEx
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
     addAndMakeVisible(fileListComp);
+    addAndMakeVisible(samplePlayerComp);
     
     initWindow();
 }
@@ -36,6 +37,10 @@ void SampleExplorerAudioProcessorEditor::resized()
     const auto fileWidth = getHeight() * 0.5;
     const auto fileHeight = getHeight() - fileY * 2.0;
     fileListComp.setBounds(fileX, fileY, fileWidth, fileHeight);
+    
+    const auto leftPad = fileListComp.getX() + fileListComp.getWidth() * 1.1;
+    const auto sampleWidth = getWidth() * 0.68;
+    samplePlayerComp.setBounds(leftPad, fileY, sampleWidth, fileHeight);
 }
 
 void SampleExplorerAudioProcessorEditor::initWindow()

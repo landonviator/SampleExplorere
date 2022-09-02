@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "GUI/Components/FileListComp.h"
+#include "GUI/Components/SamplePlayerComp.h"
 
 //==============================================================================
 /**
@@ -33,6 +34,7 @@ private:
     void initWindow();
     
     FileListComp fileListComp;
+    SamplePlayerComp samplePlayerComp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampleExplorerAudioProcessorEditor)
 };

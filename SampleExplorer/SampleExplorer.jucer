@@ -16,6 +16,10 @@
           <FILE id="mQg3c0" name="FileListComp.cpp" compile="1" resource="0"
                 file="Source/GUI/Components/FileListComp.cpp"/>
           <FILE id="toE6kd" name="FileListComp.h" compile="0" resource="0" file="Source/GUI/Components/FileListComp.h"/>
+          <FILE id="Lyh61b" name="SamplePlayerComp.cpp" compile="1" resource="0"
+                file="Source/GUI/Components/SamplePlayerComp.cpp"/>
+          <FILE id="Iy89iL" name="SamplePlayerComp.h" compile="0" resource="0"
+                file="Source/GUI/Components/SamplePlayerComp.h"/>
         </GROUP>
         <GROUP id="{C6081C74-BE98-AA63-DBD9-ACD63795B5CD}" name="LookAndFeel">
           <FILE id="TfTpgc" name="FileBrowserLAF.cpp" compile="1" resource="0"
