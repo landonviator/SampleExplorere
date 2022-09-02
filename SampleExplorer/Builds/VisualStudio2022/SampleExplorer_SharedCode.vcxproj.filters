@@ -2,8 +2,14 @@
 
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="SampleExplorer\Source\Assets">
+      <UniqueIdentifier>{2DA7DFB5-7ED6-7D6E-5A95-6D3DC563708B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="SampleExplorer\Source\GUI\Components">
       <UniqueIdentifier>{0763BC66-E705-BC72-2B61-978732678C44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SampleExplorer\Source\GUI\LookAndFeel">
+      <UniqueIdentifier>{2FC4E10A-C745-EF51-7947-1439B6ED315F}</UniqueIdentifier>
     </Filter>
     <Filter Include="SampleExplorer\Source\GUI">
       <UniqueIdentifier>{9268265B-4804-AAC2-6E63-7560297C7B6B}</UniqueIdentifier>
@@ -480,6 +486,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\GUI\Components\FileListComp.cpp">
       <Filter>SampleExplorer\Source\GUI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\GUI\LookAndFeel\FileBrowserLAF.cpp">
+      <Filter>SampleExplorer\Source\GUI\LookAndFeel</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp">
       <Filter>SampleExplorer\Source</Filter>
@@ -2707,6 +2716,9 @@
     <ClCompile Include="C:\JUCE\modules\juce_gui_extra\juce_gui_extra.mm">
       <Filter>JUCE Modules\juce_gui_extra</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_basics.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
@@ -2768,6 +2780,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\Source\GUI\Components\FileListComp.h">
       <Filter>SampleExplorer\Source\GUI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\GUI\LookAndFeel\FileBrowserLAF.h">
+      <Filter>SampleExplorer\Source\GUI\LookAndFeel</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PluginProcessor.h">
       <Filter>SampleExplorer\Source</Filter>
@@ -5334,6 +5349,9 @@
     <ClInclude Include="..\..\..\..\JT-16\modules\JUCE\modules\juce_gui_extra\juce_gui_extra.h">
       <Filter>JUCE Modules\juce_gui_extra</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h">
+      <Filter>JUCE Library Code</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
       <Filter>JUCE Library Code</Filter>
     </ClInclude>
@@ -5342,6 +5360,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Source\Assets\icons8-folder-64.png">
+      <Filter>SampleExplorer\Source\Assets</Filter>
+    </None>
+    <None Include="..\..\Source\Assets\music-box-outline.png">
+      <Filter>SampleExplorer\Source\Assets</Filter>
+    </None>
     <None Include="C:\JUCE\modules\juce_audio_devices\native\oboe\CMakeLists.txt">
       <Filter>JUCE Modules\juce_audio_devices\native\oboe</Filter>
     </None>
