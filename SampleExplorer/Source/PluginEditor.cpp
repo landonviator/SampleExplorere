@@ -13,6 +13,8 @@
 SampleExplorerAudioProcessorEditor::SampleExplorerAudioProcessorEditor (SampleExplorerAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
+    addAndMakeVisible(fileListComp);
+    
     initWindow();
 }
 
@@ -29,8 +31,11 @@ void SampleExplorerAudioProcessorEditor::paint (juce::Graphics& g)
 
 void SampleExplorerAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    const auto fileX = getWidth() * 0.02;
+    const auto fileY = getHeight() * 0.03;
+    const auto fileWidth = getHeight() * 0.5;
+    const auto fileHeight = getHeight() - fileY * 2.0;
+    fileListComp.setBounds(fileX, fileY, fileWidth, fileHeight);
 }
 
 void SampleExplorerAudioProcessorEditor::initWindow()

@@ -2,6 +2,12 @@
 
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="SampleExplorer\Source\GUI\Components">
+      <UniqueIdentifier>{0763BC66-E705-BC72-2B61-978732678C44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SampleExplorer\Source\GUI">
+      <UniqueIdentifier>{9268265B-4804-AAC2-6E63-7560297C7B6B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="SampleExplorer\Source">
       <UniqueIdentifier>{1DC1C0D5-325E-E0E3-6F2A-21C49A3DD11F}</UniqueIdentifier>
     </Filter>
@@ -472,6 +478,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\GUI\Components\FileListComp.cpp">
+      <Filter>SampleExplorer\Source\GUI\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp">
       <Filter>SampleExplorer\Source</Filter>
     </ClCompile>
@@ -2757,6 +2766,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\GUI\Components\FileListComp.h">
+      <Filter>SampleExplorer\Source\GUI\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\PluginProcessor.h">
       <Filter>SampleExplorer\Source</Filter>
     </ClInclude>
