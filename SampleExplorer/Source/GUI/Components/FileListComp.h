@@ -17,6 +17,7 @@
 /*
 */
 class FileListComp  : public juce::Component
+, public juce::DragAndDropContainer
 {
 public:
     FileListComp();
@@ -24,12 +25,13 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
-
+    void mouseDrag(const juce::MouseEvent &event) override;
+    
 private:
     
     std::unique_ptr<juce::FileBrowserComponent> fileBrowserComp;
     juce::WildcardFileFilter sampleExplorerFilter{"*.wav,* *.aif,* *.mp3*", "", "Sample filter"};
     juce::CustomFileBrowserLAF customFileBrowser;
-    
+    juce::StringArray fileName;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FileListComp)
 };

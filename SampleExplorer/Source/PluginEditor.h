@@ -35,6 +35,7 @@ private:
     
     FileListComp fileListComp;
     SamplePlayerComp samplePlayerComp;
+    juce::StringArray fileName;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampleExplorerAudioProcessorEditor)
 };

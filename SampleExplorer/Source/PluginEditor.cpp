@@ -14,8 +14,8 @@ SampleExplorerAudioProcessorEditor::SampleExplorerAudioProcessorEditor (SampleEx
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
     addAndMakeVisible(fileListComp);
-    addAndMakeVisible(samplePlayerComp);
     
+    addAndMakeVisible(samplePlayerComp);
     initWindow();
 }
 

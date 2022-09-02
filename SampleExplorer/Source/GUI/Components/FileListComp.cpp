@@ -21,6 +21,8 @@ FileListComp::FileListComp()
     fileBrowserComp->setColour(juce::FileSearchPathListComponent::ColourIds::backgroundColourId, juce::Colours::transparentBlack);
     fileBrowserComp->setLookAndFeel(&customFileBrowser);
     addAndMakeVisible(*fileBrowserComp);
+    
+    addMouseListener(this, true);
 }
 
 FileListComp::~FileListComp()
@@ -37,3 +39,15 @@ void FileListComp::resized()
 {
     fileBrowserComp->setBounds(getLocalBounds());
 }
+
+void FileListComp::mouseDrag(const juce::MouseEvent &event)
+{
+    DBG("Drag");
+    /**The plugin will now recognize when you're dragging a file*/
+    startDragging("File", this);
+    
+    /**Perform drag operation*/
+    performExternalDragDropOfFiles(fileName, true);
+}
+
+
