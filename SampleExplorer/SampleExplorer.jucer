@@ -16,6 +16,8 @@
           <FILE id="mQg3c0" name="FileListComp.cpp" compile="1" resource="0"
                 file="Source/GUI/Components/FileListComp.cpp"/>
           <FILE id="toE6kd" name="FileListComp.h" compile="0" resource="0" file="Source/GUI/Components/FileListComp.h"/>
+          <FILE id="cMq5JV" name="HeaderComp.cpp" compile="1" resource="0" file="Source/GUI/Components/HeaderComp.cpp"/>
+          <FILE id="Jdcnqg" name="HeaderComp.h" compile="0" resource="0" file="Source/GUI/Components/HeaderComp.h"/>
           <FILE id="Lyh61b" name="SamplePlayerComp.cpp" compile="1" resource="0"
                 file="Source/GUI/Components/SamplePlayerComp.cpp"/>
           <FILE id="Iy89iL" name="SamplePlayerComp.h" compile="0" resource="0"

@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include "../LookAndFeel/FileBrowserLAF.h"
 #include "SamplePlayerComp.h"
+#include "../../PluginProcessor.h"
 
 //==============================================================================
 /*
@@ -22,7 +23,7 @@ class FileListComp  : public juce::Component
 , juce::FileBrowserListener
 {
 public:
-    FileListComp(SamplePlayerComp&);
+    FileListComp(SamplePlayerComp&, SampleExplorerAudioProcessor&);
     ~FileListComp() override;
 
     void paint (juce::Graphics&) override;
@@ -37,6 +38,7 @@ public:
     
 private:
     
+    SampleExplorerAudioProcessor& audioProcessor;
     SamplePlayerComp& samplePlayer;
     
     std::unique_ptr<juce::FileBrowserComponent> fileBrowserComp;

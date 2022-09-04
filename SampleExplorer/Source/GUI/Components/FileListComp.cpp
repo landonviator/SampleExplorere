@@ -12,10 +12,21 @@
 #include "FileListComp.h"
 
 //==============================================================================
-FileListComp::FileListComp(SamplePlayerComp& s) : samplePlayer(s)
+FileListComp::FileListComp(SamplePlayerComp& s, SampleExplorerAudioProcessor& p) : samplePlayer(s), audioProcessor(p)
 {
-   auto location = juce::File::getSpecialLocation(juce::File::SpecialLocationType::commonDocumentsDirectory);
-    fileBrowserComp = std::make_unique<juce::FileBrowserComponent>(5, location, &sampleExplorerFilter, nullptr);
+    juce::File location;
+    
+    if (!audioProcessor.sampleRoot.exists())
+    {
+        location = juce::File::getSpecialLocation(juce::File::SpecialLocationType::commonDocumentsDirectory);
+    }
+   
+    else
+    {
+        location = audioProcessor.sampleRoot.getFullPathName();
+    }
+    
+    fileBrowserComp = std::make_unique<juce::FileBrowserComponent>(5, location.getFullPathName(), &sampleExplorerFilter, nullptr);
     fileBrowserComp->setColour(juce::FileBrowserComponent::ColourIds::filenameBoxBackgroundColourId, juce::Colours::transparentBlack);
     fileBrowserComp->setColour(juce::FileBrowserComponent::ColourIds::currentPathBoxBackgroundColourId, juce::Colours::transparentBlack);
     fileBrowserComp->setColour(juce::FileSearchPathListComponent::ColourIds::backgroundColourId, juce::Colours::transparentBlack);
@@ -33,7 +44,7 @@ FileListComp::~FileListComp()
 
 void FileListComp::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black.brighter(0.1));
+    g.fillAll(juce::Colour::fromRGB(44, 58, 71).withAlpha(0.15f));
 }
 
 void FileListComp::resized()
@@ -70,6 +81,8 @@ void FileListComp::fileDoubleClicked(const juce::File &file)
         fileName = fileArray;
         samplePlayer.loadFile(file);
     }
+    
+    audioProcessor.variableTree.setProperty("sampleRoot", file.getParentDirectory().getFullPathName(), nullptr);
 }
 
 void FileListComp::browserRootChanged(const juce::File &newRoot)

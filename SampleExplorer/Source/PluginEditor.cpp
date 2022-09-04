@@ -12,12 +12,34 @@
 //==============================================================================
 SampleExplorerAudioProcessorEditor::SampleExplorerAudioProcessorEditor (SampleExplorerAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
-, fileListComp(samplePlayerComp)
+, fileListComp(samplePlayerComp, audioProcessor)
 , samplePlayerComp(audioProcessor)
+, headerComp(audioProcessor)
 {
-    addAndMakeVisible(fileListComp);
+    sampleDropShadow.radius = 24;
+    sampleDropShadow.offset = juce::Point<int> (-1, 4);
+    sampleDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
     
+    sampleDropShadower = std::make_unique<juce::DropShadower>(sampleDropShadow);
+    sampleDropShadower->setOwner(&samplePlayerComp);
+    
+    headerDropShadow.radius = 16;
+    headerDropShadow.offset = juce::Point<int> (-1, 4);
+    headerDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
+    
+    headerDropShadower = std::make_unique<juce::DropShadower>(headerDropShadow);
+    headerDropShadower->setOwner(&headerComp);
+    
+    fileDropShadow.radius = 16;
+    fileDropShadow.offset = juce::Point<int> (-1, 4);
+    fileDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
+    
+    fileDropShadower = std::make_unique<juce::DropShadower>(fileDropShadow);
+    fileDropShadower->setOwner(&fileListComp);
+    
+    addAndMakeVisible(fileListComp);
     addAndMakeVisible(samplePlayerComp);
+    addAndMakeVisible(headerComp);
     initWindow();
 }
 
@@ -28,21 +50,25 @@ SampleExplorerAudioProcessorEditor::~SampleExplorerAudioProcessorEditor()
 //==============================================================================
 void SampleExplorerAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(252, 66, 123), getHeight(), juce::Colour::fromRGB(214, 162, 232), getHeight() * 0.3));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.85f), getHeight(), juce::Colour::fromRGB(40, 42, 53).brighter(0.02), getHeight() * 0.4));
     g.fillRect(getLocalBounds());
 }
 
 void SampleExplorerAudioProcessorEditor::resized()
 {
     const auto fileX = getWidth() * 0.02;
-    const auto fileY = getHeight() * 0.03;
+    const auto fileY = getHeight() * 0.18;
     const auto fileWidth = getHeight() * 0.5;
-    const auto fileHeight = getHeight() - fileY * 2.0;
+    const auto fileHeight = getHeight() * 0.8;
     fileListComp.setBounds(fileX, fileY, fileWidth, fileHeight);
     
     const auto leftPad = fileListComp.getX() + fileListComp.getWidth() * 1.1;
     const auto sampleWidth = getWidth() * 0.68;
-    samplePlayerComp.setBounds(leftPad, fileY, sampleWidth, fileHeight);
+    const auto sampleY = getHeight() * 0.63;
+    const auto sampleHeight = getHeight()  * 0.35;
+    samplePlayerComp.setBounds(leftPad, sampleY, sampleWidth, sampleHeight);
+    
+    headerComp.setBounds(0, 0, getWidth(), getHeight() * 0.11);
 }
 
 void SampleExplorerAudioProcessorEditor::initWindow()

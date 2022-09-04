@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\GUI\Components\FileListComp.cpp"/>
+    <ClCompile Include="..\..\Source\GUI\Components\HeaderComp.cpp"/>
     <ClCompile Include="..\..\Source\GUI\Components\SamplePlayerComp.cpp"/>
     <ClCompile Include="..\..\Source\GUI\LookAndFeel\FileBrowserLAF.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
@@ -2406,6 +2407,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\GUI\Components\FileListComp.h"/>
+    <ClInclude Include="..\..\Source\GUI\Components\HeaderComp.h"/>
     <ClInclude Include="..\..\Source\GUI\Components\SamplePlayerComp.h"/>
     <ClInclude Include="..\..\Source\GUI\LookAndFeel\FileBrowserLAF.h"/>
     <ClInclude Include="..\..\Source\PluginProcessor.h"/>

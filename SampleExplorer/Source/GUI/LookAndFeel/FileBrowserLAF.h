@@ -24,5 +24,14 @@ public:
                                              const String& fileTimeDescription,
                                              bool isDirectory, bool isItemSelected,
                              int /*itemIndex*/, DirectoryContentsDisplayComponent& dcc) override;
+    
+    Button* createFileBrowserGoUpButton() override;
+    
+    void layoutFileBrowserComponent (FileBrowserComponent& browserComp,
+                                                     DirectoryContentsDisplayComponent* fileListComponent,
+                                                     FilePreviewComponent* previewComp,
+                                                     ComboBox* currentPathBox,
+                                                     TextEditor* filenameBox,
+                                     Button* goUpButton) override;
 };
 }

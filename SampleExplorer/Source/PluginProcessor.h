@@ -56,14 +56,20 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
+    juce::AudioProcessorValueTreeState treeState;
+    juce::ValueTree variableTree;
+    
     /** Window Vars =====================================================*/
     float windowWidth {0.0f};
     float windowHeight {0.0f};
 
     juce::AudioTransportSource transportSource;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
+    juce::File sampleSaveLocation, sampleRoot;
     
 private:
     //==============================================================================
+    
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampleExplorerAudioProcessor)
 };

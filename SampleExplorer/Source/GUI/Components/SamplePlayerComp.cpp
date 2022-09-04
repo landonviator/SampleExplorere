@@ -38,9 +38,12 @@ SamplePlayerComp::~SamplePlayerComp()
 
 void SamplePlayerComp::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black.brighter(0.1));
+    g.fillAll(juce::Colour::fromRGB(44, 58, 71).withAlpha(0.15f));
     
-    juce::Rectangle<int> thumbnailBounds (getWidth() * 0.1, getHeight() * 0.6, getWidth() - getWidth() * 0.2, getHeight() * 0.3);
+    juce::Rectangle<int> thumbnailBounds (getWidth() * 0.1,
+                                          getHeight() * 0.1,
+                                          getWidth() - getWidth() * 0.2,
+                                          getHeight() * 0.8);
 
     if (thumbnail.getNumChannels() == 0)
         paintIfNoFileLoaded (g, thumbnailBounds);
@@ -50,18 +53,18 @@ void SamplePlayerComp::paint (juce::Graphics& g)
 
 void SamplePlayerComp::paintIfNoFileLoaded (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
 {
-    g.setColour (juce::Colours::black.brighter(0.15));
+    g.setColour (juce::Colours::transparentBlack);
     g.fillRect (thumbnailBounds);
-    g.setColour (juce::Colours::white);
+    g.setColour (juce::Colour::fromRGB(40, 42, 53).brighter(1.0f).withAlpha(0.9f));
     g.drawFittedText ("No File Loaded", thumbnailBounds, juce::Justification::centred, 1);
 }
 
 void SamplePlayerComp::paintIfFileLoaded (juce::Graphics& g, const juce::Rectangle<int>& thumbnailBounds)
 {
-    g.setColour (juce::Colours::black.brighter(0.15));
+    g.setColour (juce::Colours::transparentBlack);
     g.fillRect (thumbnailBounds);
 
-    g.setColour (juce::Colour::fromRGB(252, 66, 123).withAlpha(0.8f));
+    g.setColour (juce::Colour::fromRGB(179, 55, 113).withAlpha(0.8f));
 
     thumbnail.drawChannels (g,
                             thumbnailBounds.withSizeKeepingCentre(thumbnailBounds.getWidth() * 0.9, thumbnailBounds.getHeight() * 0.9),
@@ -73,7 +76,7 @@ void SamplePlayerComp::paintIfFileLoaded (juce::Graphics& g, const juce::Rectang
 void SamplePlayerComp::resized()
 {
     const auto buttonX = getWidth() * 0.0125;
-    const auto buttonY = getHeight() * 0.62;
+    const auto buttonY = getHeight() * 0.17;
     const auto buttonWidth = getWidth() * 0.075;
     const auto buttonHeight = buttonWidth * 0.5;
     const auto spaceBetween = 1.3;
@@ -217,8 +220,15 @@ void SamplePlayerComp::loadFile(const juce::File &file)
 
 void SamplePlayerComp::initButtons(juce::TextButton &btn, const juce::String btnText)
 {
+    const auto brighter = 1.0;
+    const auto alpha = 0.5f;
     addAndMakeVisible(btn);
     btn.setButtonText(btnText);
+    btn.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
+    btn.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
+    btn.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
+    btn.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
+    btn.setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
 }
 
 void SamplePlayerComp::setButtonEvents()
@@ -280,6 +290,7 @@ void SamplePlayerComp::setButtonEvents()
     
     loopBtn.onClick = [this]()
     {
+        if (audioProcessor.readerSource == nullptr) return;
         audioProcessor.readerSource->setLooping(loopBtn.getToggleState());
     };
 }

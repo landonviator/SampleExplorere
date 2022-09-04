@@ -19,14 +19,33 @@ SampleExplorerAudioProcessor::SampleExplorerAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), treeState(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
+    variableTree = {
+        
+        "Variables", {},
+        {
+          { "Group", {{ "name", "Vars" }},
+            {
+              { "Parameter", {{ "id", "sampleSaveLocation" }, { "value", "/" }}},
+                { "Parameter", {{ "id", "sampleRoot" }, { "value", "/" }}}
+            }
+          }
+        }
+      };
 }
 
 SampleExplorerAudioProcessor::~SampleExplorerAudioProcessor()
 {
     transportSource.setSource(nullptr);
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SampleExplorerAudioProcessor::createParameterLayout()
+{
+    std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    return { params.begin(), params.end() };
 }
 
 //==============================================================================
@@ -164,15 +183,22 @@ juce::AudioProcessorEditor* SampleExplorerAudioProcessor::createEditor()
 //==============================================================================
 void SampleExplorerAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    treeState.state.appendChild(variableTree, nullptr);
+    juce::MemoryOutputStream stream(destData, false);
+    treeState.state.writeToStream (stream);
 }
 
 void SampleExplorerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    auto tree = juce::ValueTree::readFromData (data, size_t(sizeInBytes));
+    variableTree = tree.getChildWithName("Variables");
+    
+    if (tree.isValid())
+    {
+        treeState.state = tree;
+        sampleSaveLocation = variableTree.getProperty("sampleSaveLocation");
+        sampleRoot = variableTree.getProperty("sampleRoot");
+    }
 }
 
 //==============================================================================
