@@ -60,6 +60,9 @@ public:
     float windowWidth {0.0f};
     float windowHeight {0.0f};
 
+    juce::AudioTransportSource transportSource;
+    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
+    
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampleExplorerAudioProcessor)

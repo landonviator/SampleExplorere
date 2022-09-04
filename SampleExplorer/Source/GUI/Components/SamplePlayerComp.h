@@ -11,21 +11,27 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../../PluginProcessor.h"
 
 //==============================================================================
 /*
 */
-class SamplePlayerComp  : public juce::Component, public juce::ChangeListener
+class SamplePlayerComp  : public juce::Component
+, public juce::ChangeListener
 {
 public:
-    SamplePlayerComp();
+    SamplePlayerComp(SampleExplorerAudioProcessor&);
     ~SamplePlayerComp() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
     void changeListenerCallback (juce::ChangeBroadcaster* source) override;
+    
+    void loadFile(const juce::File& file);
 
 private:
+    
+    SampleExplorerAudioProcessor& audioProcessor;
     
     enum TransportState
     {
@@ -44,7 +50,10 @@ private:
     TransportState state;
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
-    juce::TextButton openBtn;
+    juce::TextButton openBtn, playBtn, stopBtn, loopBtn;
+    void initButtons(juce::TextButton& btn, const juce::String btnText);
+    void setButtonEvents();
+    std::unique_ptr<juce::AlertWindow> alertWindow;
     
     void transportSourceChanged();
     void thumbnailChanged();

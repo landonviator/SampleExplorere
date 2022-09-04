@@ -12,6 +12,8 @@
 //==============================================================================
 SampleExplorerAudioProcessorEditor::SampleExplorerAudioProcessorEditor (SampleExplorerAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
+, fileListComp(samplePlayerComp)
+, samplePlayerComp(audioProcessor)
 {
     addAndMakeVisible(fileListComp);
     
@@ -55,7 +57,7 @@ void SampleExplorerAudioProcessorEditor::initWindow()
     
     if (r.getWidth() <= 1920)
     {
-        width = x * 0.75;
+        width = x * 0.9;
     }
     
     else

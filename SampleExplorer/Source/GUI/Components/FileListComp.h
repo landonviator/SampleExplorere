@@ -12,22 +12,32 @@
 
 #include <JuceHeader.h>
 #include "../LookAndFeel/FileBrowserLAF.h"
+#include "SamplePlayerComp.h"
 
 //==============================================================================
 /*
 */
 class FileListComp  : public juce::Component
 , public juce::DragAndDropContainer
+, juce::FileBrowserListener
 {
 public:
-    FileListComp();
+    FileListComp(SamplePlayerComp&);
     ~FileListComp() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
     void mouseDrag(const juce::MouseEvent &event) override;
     
+    /**Virtual functions for file browser*/
+    void fileClicked (const juce::File &file, const juce::MouseEvent &event) override;
+    void selectionChanged () override;
+    void fileDoubleClicked (const juce::File &file) override;
+    void browserRootChanged (const juce::File &newRoot) override;
+    
 private:
+    
+    SamplePlayerComp& samplePlayer;
     
     std::unique_ptr<juce::FileBrowserComponent> fileBrowserComp;
     juce::WildcardFileFilter sampleExplorerFilter{"*.wav,* *.aif,* *.mp3*", "", "Sample filter"};

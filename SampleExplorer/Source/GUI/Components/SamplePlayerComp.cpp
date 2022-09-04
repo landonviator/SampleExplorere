@@ -12,7 +12,8 @@
 #include "SamplePlayerComp.h"
 
 //==============================================================================
-SamplePlayerComp::SamplePlayerComp() :
+SamplePlayerComp::SamplePlayerComp(SampleExplorerAudioProcessor& p) :
+audioProcessor(p),
 state (Stopped),
 thumbnailCache (5),
 thumbnail (512, formatManager, thumbnailCache)
@@ -20,36 +21,15 @@ thumbnail (512, formatManager, thumbnailCache)
     thumbnail.addChangeListener (this);
     
     formatManager.registerBasicFormats();
-    //audioProcessor.transportSource.addChangeListener (this);
+    audioProcessor.transportSource.addChangeListener (this);
     
-    addAndMakeVisible(openBtn);
-    openBtn.setButtonText("Open");
-    openBtn.onClick = [this]()
-    {
-        chooser = std::make_unique<juce::FileChooser> ("Select a Wave file to play...",
-                                                       juce::File{},
-                                                       "*.wav");
-        auto chooserFlags = juce::FileBrowserComponent::openMode
-                          | juce::FileBrowserComponent::canSelectFiles;
- 
-        chooser->launchAsync (chooserFlags, [this] (const juce::FileChooser& fc)
-        {
-            auto file = fc.getResult();
- 
-            if (file != juce::File{})
-            {
-                auto* reader = formatManager.createReaderFor (file);
- 
-                if (reader != nullptr)
-                {
-                    auto newSource = std::make_unique<juce::AudioFormatReaderSource> (reader, true);
-                    transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);
-                    thumbnail.setSource (new juce::FileInputSource (file));
-                    readerSource.reset (newSource.release());
-                }
-            }
-        });
-    };
+    initButtons(openBtn, "Open");
+    initButtons(playBtn, "Play");
+    initButtons(loopBtn, "Loop");
+    initButtons(stopBtn, "Stop");
+    setButtonEvents();
+    
+    addMouseListener(this, true);
 }
 
 SamplePlayerComp::~SamplePlayerComp()
@@ -81,7 +61,7 @@ void SamplePlayerComp::paintIfFileLoaded (juce::Graphics& g, const juce::Rectang
     g.setColour (juce::Colours::black.brighter(0.15));
     g.fillRect (thumbnailBounds);
 
-    g.setColour (juce::Colours::whitesmoke.withAlpha(0.1f));
+    g.setColour (juce::Colour::fromRGB(252, 66, 123).withAlpha(0.8f));
 
     thumbnail.drawChannels (g,
                             thumbnailBounds.withSizeKeepingCentre(thumbnailBounds.getWidth() * 0.9, thumbnailBounds.getHeight() * 0.9),
@@ -92,13 +72,55 @@ void SamplePlayerComp::paintIfFileLoaded (juce::Graphics& g, const juce::Rectang
 
 void SamplePlayerComp::resized()
 {
-    openBtn.setBounds(getLocalBounds().withSizeKeepingCentre(getWidth() * 0.1, getWidth() * 0.05));
+    const auto buttonX = getWidth() * 0.0125;
+    const auto buttonY = getHeight() * 0.62;
+    const auto buttonWidth = getWidth() * 0.075;
+    const auto buttonHeight = buttonWidth * 0.5;
+    const auto spaceBetween = 1.3;
+    
+    openBtn.setBounds(buttonX,
+                      buttonY,
+                      buttonWidth,
+                      buttonHeight);
+    playBtn.setBounds(buttonX,
+                      openBtn.getY() + openBtn.getHeight() * spaceBetween,
+                      buttonWidth,
+                      buttonHeight);
+    loopBtn.setBounds(buttonX,
+                       playBtn.getY() + playBtn.getHeight() * spaceBetween,
+                       buttonWidth,
+                       buttonHeight);
+    stopBtn.setBounds(buttonX,
+                      loopBtn.getY() + loopBtn.getHeight() * spaceBetween,
+                      buttonWidth,
+                      buttonHeight);
 }
 
 void SamplePlayerComp::changeListenerCallback(juce::ChangeBroadcaster *source)
 {
-    if (source == &transportSource) transportSourceChanged();
-    if (source == &thumbnail)       thumbnailChanged();
+    /**Logic for changing the listener callback when the playing state changes*/
+     if (source == &audioProcessor.transportSource)
+     {
+         if (audioProcessor.transportSource.isPlaying())
+         {
+             changeState (Playing);
+         }
+         
+         else if ((state == Stopping) || (state == Playing))
+         {
+             changeState (Stopped);
+         }
+         
+         else if (state == Pausing)
+         {
+             changeState (Paused);
+         }
+     }
+     
+     if (source == &thumbnail)
+     {
+         thumbnailChanged();
+     }
 }
 
 void SamplePlayerComp::transportSourceChanged()
@@ -131,34 +153,133 @@ void SamplePlayerComp::changeState(TransportState newState)
 //                    purchaseButton.triggerClick();
 //                }
 //
-//                playButton.setButtonText ("Play");
-//                resetButton.setButtonText ("Reset");
-//                resetButton.setEnabled (false);
-//                audioProcessor.transportSource.setPosition (0.0);
+                playBtn.setButtonText ("Play");
+                stopBtn.setButtonText ("Reset");
+                stopBtn.setEnabled (false);
+                audioProcessor.transportSource.setPosition (0.0);
                 break;
      
             case Starting:
-                //audioProcessor.transportSource.start();
+                audioProcessor.transportSource.start();
                 break;
      
             case Playing:
-                //playButton.setButtonText ("Pause");
-                //resetButton.setButtonText ("Reset");
-                //resetButton.setEnabled (true);
+                playBtn.setButtonText ("Pause");
+                stopBtn.setButtonText ("Reset");
+                stopBtn.setEnabled (true);
                 break;
      
             case Pausing:
-                //audioProcessor.transportSource.stop();
+                audioProcessor.transportSource.stop();
                 break;
      
             case Paused:
-                //playButton.setButtonText ("Play");
-                //resetButton.setButtonText ("Reset");
+                playBtn.setButtonText ("Play");
+                stopBtn.setButtonText ("Reset");
                 break;
      
             case Stopping:
-                //audioProcessor.transportSource.stop();
+                audioProcessor.transportSource.stop();
                 break;
         }
     }
+}
+
+void SamplePlayerComp::loadFile(const juce::File &file)
+{
+    auto* reader = formatManager.createReaderFor (file);
+    
+    if (file.existsAsFile() && reader != nullptr)
+    {
+        /**Create reader source*/
+        std::unique_ptr<juce::AudioFormatReaderSource> newSource (new juce::AudioFormatReaderSource (reader, true));
+        
+        /**Set the player's source in the audio processor to the reader source*/
+        audioProcessor.transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);
+        
+        /**Enable play button*/
+        playBtn.setEnabled (true);
+        
+        /**Tell the thumbnail to use the reader source for its data*/
+        thumbnail.setSource (new juce::FileInputSource (file));
+        
+        /**Reset the reader source for its next use*/
+        audioProcessor.readerSource.reset (newSource.release());
+    }
+    
+    else
+    {
+        alertWindow = std::make_unique<juce::AlertWindow>("Error!", "There was an error with either the file you tried to load or the format, please verify that the file is valid.", juce::MessageBoxIconType::WarningIcon);
+        
+        alertWindow->showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "Error!", "There was an error with either the file you tried to load or the format, please verify that the file is valid.");
+    }
+}
+
+void SamplePlayerComp::initButtons(juce::TextButton &btn, const juce::String btnText)
+{
+    addAndMakeVisible(btn);
+    btn.setButtonText(btnText);
+}
+
+void SamplePlayerComp::setButtonEvents()
+{
+    openBtn.onClick = [this]()
+    {
+        chooser = std::make_unique<juce::FileChooser> ("Select a Wave file to play...",
+                                                       juce::File{},
+                                                       "*.wav");
+        auto chooserFlags = juce::FileBrowserComponent::openMode
+                          | juce::FileBrowserComponent::canSelectFiles;
+ 
+        chooser->launchAsync (chooserFlags, [this] (const juce::FileChooser& fc)
+        {
+            auto file = fc.getResult();
+ 
+            if (file != juce::File{})
+            {
+                auto* reader = formatManager.createReaderFor (file);
+ 
+                if (reader != nullptr)
+                {
+                    auto newSource = std::make_unique<juce::AudioFormatReaderSource> (reader, true);
+                    transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);
+                    thumbnail.setSource (new juce::FileInputSource (file));
+                    readerSource.reset (newSource.release());
+                }
+            }
+        });
+    };
+    
+    playBtn.onClick = [this]()
+    {
+        if (state == Stopped || state == Paused)
+        {
+            changeState (Starting);
+        }
+        
+        else if (state == Playing)
+        {
+            changeState (Pausing);
+        }
+    };
+    
+    stopBtn.onClick = [this]()
+    {
+        if (state == Paused)
+        {
+            changeState (Stopped);
+        }
+        
+        else
+        {
+            changeState (Stopping);
+        }
+    };
+    
+    loopBtn.setClickingTogglesState(true);
+    
+    loopBtn.onClick = [this]()
+    {
+        audioProcessor.readerSource->setLooping(loopBtn.getToggleState());
+    };
 }

@@ -12,13 +12,14 @@
 #include "FileListComp.h"
 
 //==============================================================================
-FileListComp::FileListComp()
+FileListComp::FileListComp(SamplePlayerComp& s) : samplePlayer(s)
 {
    auto location = juce::File::getSpecialLocation(juce::File::SpecialLocationType::commonDocumentsDirectory);
     fileBrowserComp = std::make_unique<juce::FileBrowserComponent>(5, location, &sampleExplorerFilter, nullptr);
     fileBrowserComp->setColour(juce::FileBrowserComponent::ColourIds::filenameBoxBackgroundColourId, juce::Colours::transparentBlack);
     fileBrowserComp->setColour(juce::FileBrowserComponent::ColourIds::currentPathBoxBackgroundColourId, juce::Colours::transparentBlack);
     fileBrowserComp->setColour(juce::FileSearchPathListComponent::ColourIds::backgroundColourId, juce::Colours::transparentBlack);
+    fileBrowserComp->addListener(this);
     fileBrowserComp->setLookAndFeel(&customFileBrowser);
     addAndMakeVisible(*fileBrowserComp);
     
@@ -42,7 +43,6 @@ void FileListComp::resized()
 
 void FileListComp::mouseDrag(const juce::MouseEvent &event)
 {
-    DBG("Drag");
     /**The plugin will now recognize when you're dragging a file*/
     startDragging("File", this);
     
@@ -50,4 +50,34 @@ void FileListComp::mouseDrag(const juce::MouseEvent &event)
     performExternalDragDropOfFiles(fileName, true);
 }
 
+void FileListComp::fileClicked (const juce::File &file, const juce::MouseEvent &event)
+{
+//    juce::StringArray fileArray(file.getFullPathName());
+//
+//    if (file.getFileExtension() == ".wav" || file.getFileExtension() == ".mp3")
+//    {
+//        fileName = fileArray;
+//        samplePlayer.loadFile(file);
+//    }
+}
 
+void FileListComp::fileDoubleClicked(const juce::File &file)
+{
+    juce::StringArray fileArray(file.getFullPathName());
+    
+    if (file.getFileExtension() == ".wav" || file.getFileExtension() == ".mp3")
+    {
+        fileName = fileArray;
+        samplePlayer.loadFile(file);
+    }
+}
+
+void FileListComp::browserRootChanged(const juce::File &newRoot)
+{
+    
+}
+
+void FileListComp::selectionChanged()
+{
+
+}
