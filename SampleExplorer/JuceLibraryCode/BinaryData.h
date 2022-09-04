@@ -8,11 +8,11 @@
 
 namespace BinaryData
 {
-    extern const char*   icons8folder64_png;
-    const int            icons8folder64_pngSize = 902;
+    extern const char*   audiofile_png;
+    const int            audiofile_pngSize = 19273;
 
-    extern const char*   musicboxoutline_png;
-    const int            musicboxoutline_pngSize = 553;
+    extern const char*   openfolder_png;
+    const int            openfolder_pngSize = 18524;
 
     // Number of elements in the namedResourceList and originalFileNames arrays.
     const int namedResourceListSize = 2;

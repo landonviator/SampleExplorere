@@ -29,12 +29,12 @@ void CustomFileBrowserLAF::drawFileBrowserRow (Graphics& g, int width, int heigh
     
     if (isDirectory)
     {
-        iconImage = juce::ImageCache::getFromMemory(BinaryData::icons8folder64_png, BinaryData::icons8folder64_pngSize);
+        iconImage = juce::ImageCache::getFromMemory(BinaryData::openfolder_png, BinaryData::openfolder_pngSize);
     }
     
     else
     {
-        iconImage = juce::ImageCache::getFromMemory(BinaryData::musicboxoutline_png, BinaryData::musicboxoutline_pngSize);
+        iconImage = juce::ImageCache::getFromMemory(BinaryData::audiofile_png, BinaryData::audiofile_pngSize);
     }
     
     auto fileListComp = dynamic_cast<Component*> (&dcc);

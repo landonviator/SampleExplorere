@@ -64,7 +64,8 @@ void SamplePlayerComp::paintIfFileLoaded (juce::Graphics& g, const juce::Rectang
     g.setColour (juce::Colours::transparentBlack);
     g.fillRect (thumbnailBounds);
 
-    g.setColour (juce::Colour::fromRGB(179, 55, 113).withAlpha(0.8f));
+    //g.setColour (juce::Colour::fromRGB(179, 55, 113).withAlpha(0.8f));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(172, 67, 237), getHeight(), juce::Colour::fromRGB(90, 182, 223), getHeight() * 0.4));
 
     thumbnail.drawChannels (g,
                             thumbnailBounds.withSizeKeepingCentre(thumbnailBounds.getWidth() * 0.9, thumbnailBounds.getHeight() * 0.9),

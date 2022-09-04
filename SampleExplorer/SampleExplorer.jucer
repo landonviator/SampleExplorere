@@ -6,10 +6,8 @@
   <MAINGROUP id="Y0uaGL" name="SampleExplorer">
     <GROUP id="{25F45A80-9F00-236B-1886-2171558EDF61}" name="Source">
       <GROUP id="{2C94268F-7524-E096-042D-D6F091C11128}" name="Assets">
-        <FILE id="Za89X5" name="icons8-folder-64.png" compile="0" resource="1"
-              file="Source/Assets/icons8-folder-64.png"/>
-        <FILE id="lVKO7W" name="music-box-outline.png" compile="0" resource="1"
-              file="Source/Assets/music-box-outline.png"/>
+        <FILE id="bJ7AEs" name="audio-file.png" compile="0" resource="1" file="Source/Assets/audio-file.png"/>
+        <FILE id="O0cLzH" name="open-folder.png" compile="0" resource="1" file="Source/Assets/open-folder.png"/>
       </GROUP>
       <GROUP id="{27DDFD8D-3A75-0914-EEE5-46532FCCE862}" name="GUI">
         <GROUP id="{31646D3A-57DB-4C42-878D-4AA72A4FEC88}" name="Components">

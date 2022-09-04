@@ -12,7 +12,7 @@
 #include "FileListComp.h"
 
 //==============================================================================
-FileListComp::FileListComp(SamplePlayerComp& s, SampleExplorerAudioProcessor& p) : samplePlayer(s), audioProcessor(p)
+FileListComp::FileListComp(SamplePlayerComp& s, SampleExplorerAudioProcessor& p) : audioProcessor(p), samplePlayer(s)
 {
     juce::File location;
     
@@ -63,13 +63,7 @@ void FileListComp::mouseDrag(const juce::MouseEvent &event)
 
 void FileListComp::fileClicked (const juce::File &file, const juce::MouseEvent &event)
 {
-//    juce::StringArray fileArray(file.getFullPathName());
-//
-//    if (file.getFileExtension() == ".wav" || file.getFileExtension() == ".mp3")
-//    {
-//        fileName = fileArray;
-//        samplePlayer.loadFile(file);
-//    }
+    
 }
 
 void FileListComp::fileDoubleClicked(const juce::File &file)

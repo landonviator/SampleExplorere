@@ -5900,10 +5900,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Source\Assets\icons8-folder-64.png">
+    <None Include="..\..\Source\Assets\audio-file.png">
       <Filter>SampleExplorer\Source\Assets</Filter>
     </None>
-    <None Include="..\..\Source\Assets\music-box-outline.png">
+    <None Include="..\..\Source\Assets\open-folder.png">
       <Filter>SampleExplorer\Source\Assets</Filter>
     </None>
     <None Include="C:\JUCE\modules\juce_audio_devices\native\oboe\CMakeLists.txt">
