@@ -44,7 +44,7 @@ FileListComp::~FileListComp()
 
 void FileListComp::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromRGB(44, 58, 71).withAlpha(0.15f));
+    g.fillAll(juce::Colour::fromRGB(64, 64, 122).withAlpha(0.5f));
 }
 
 void FileListComp::resized()

@@ -50,8 +50,9 @@ SampleExplorerAudioProcessorEditor::~SampleExplorerAudioProcessorEditor()
 //==============================================================================
 void SampleExplorerAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.85f), getHeight(), juce::Colour::fromRGB(40, 42, 53).brighter(0.02), getHeight() * 0.4));
-    g.fillRect(getLocalBounds());
+    g.fillAll(juce::Colours::black.brighter(0.1));
+    //g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.85f), getHeight(), juce::Colour::fromRGB(40, 42, 53).brighter(0.02), getHeight() * 0.4));
+   // g.fillRect(getLocalBounds());
 }
 
 void SampleExplorerAudioProcessorEditor::resized()

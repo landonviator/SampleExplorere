@@ -38,7 +38,7 @@ SamplePlayerComp::~SamplePlayerComp()
 
 void SamplePlayerComp::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromRGB(44, 58, 71).withAlpha(0.15f));
+    g.fillAll(juce::Colour::fromRGB(64, 64, 122).withAlpha(0.5f));
     
     juce::Rectangle<int> thumbnailBounds (getWidth() * 0.1,
                                           getHeight() * 0.1,
