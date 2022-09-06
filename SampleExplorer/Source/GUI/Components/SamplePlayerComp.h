@@ -12,12 +12,14 @@
 
 #include <JuceHeader.h>
 #include "../../PluginProcessor.h"
+#include "../LookAndFeel/TextButtonLAF.h"
 
 //==============================================================================
 /*
 */
 class SamplePlayerComp  : public juce::Component
 , public juce::ChangeListener
+, private juce::Timer
 {
 public:
     SamplePlayerComp(SampleExplorerAudioProcessor&);
@@ -26,8 +28,12 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void changeListenerCallback (juce::ChangeBroadcaster* source) override;
-    
     void loadFile(const juce::File& file);
+    
+    void timerCallback () override
+    {
+        repaint();
+    }
 
 private:
     
@@ -50,8 +56,10 @@ private:
     TransportState state;
     juce::AudioThumbnailCache thumbnailCache;
     juce::AudioThumbnail thumbnail;
-    juce::TextButton openBtn, playBtn, stopBtn, loopBtn;
+    juce::TextButton openBtn, playBtn, stopBtn, loopBtn, exportBtn;
+    juce::CustomTextButton customTextButton;
     void initButtons(juce::TextButton& btn, const juce::String btnText);
+    void cleanMemory();
     void setButtonEvents();
     std::unique_ptr<juce::AlertWindow> alertWindow;
     

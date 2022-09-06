@@ -11,6 +11,8 @@
       </GROUP>
       <GROUP id="{27DDFD8D-3A75-0914-EEE5-46532FCCE862}" name="GUI">
         <GROUP id="{31646D3A-57DB-4C42-878D-4AA72A4FEC88}" name="Components">
+          <FILE id="RhhUrl" name="EffectsComp.cpp" compile="1" resource="0" file="Source/GUI/Components/EffectsComp.cpp"/>
+          <FILE id="dq4sEj" name="EffectsComp.h" compile="0" resource="0" file="Source/GUI/Components/EffectsComp.h"/>
           <FILE id="mQg3c0" name="FileListComp.cpp" compile="1" resource="0"
                 file="Source/GUI/Components/FileListComp.cpp"/>
           <FILE id="toE6kd" name="FileListComp.h" compile="0" resource="0" file="Source/GUI/Components/FileListComp.h"/>
@@ -26,6 +28,9 @@
                 file="Source/GUI/LookAndFeel/FileBrowserLAF.cpp"/>
           <FILE id="EmHGkv" name="FileBrowserLAF.h" compile="0" resource="0"
                 file="Source/GUI/LookAndFeel/FileBrowserLAF.h"/>
+          <FILE id="QXs8PV" name="TextButtonLAF.cpp" compile="1" resource="0"
+                file="Source/GUI/LookAndFeel/TextButtonLAF.cpp"/>
+          <FILE id="eCequo" name="TextButtonLAF.h" compile="0" resource="0" file="Source/GUI/LookAndFeel/TextButtonLAF.h"/>
         </GROUP>
       </GROUP>
       <FILE id="ouD3WO" name="PluginProcessor.cpp" compile="1" resource="0"

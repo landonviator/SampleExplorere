@@ -18,6 +18,7 @@ state (Stopped),
 thumbnailCache (5),
 thumbnail (512, formatManager, thumbnailCache)
 {
+    startTimer(40);
     thumbnail.addChangeListener (this);
     
     formatManager.registerBasicFormats();
@@ -27,6 +28,7 @@ thumbnail (512, formatManager, thumbnailCache)
     initButtons(playBtn, "Play");
     initButtons(loopBtn, "Loop");
     initButtons(stopBtn, "Stop");
+    initButtons(exportBtn, "Export");
     setButtonEvents();
     
     addMouseListener(this, true);
@@ -34,17 +36,23 @@ thumbnail (512, formatManager, thumbnailCache)
 
 SamplePlayerComp::~SamplePlayerComp()
 {
+    stopTimer();
+    cleanMemory();
 }
 
 void SamplePlayerComp::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromRGB(64, 64, 122).withAlpha(0.5f));
+    g.fillAll(juce::Colour::fromRGB(39, 60, 117).withAlpha(0.5f));
     
-    juce::Rectangle<int> thumbnailBounds (getWidth() * 0.1,
-                                          getHeight() * 0.1,
-                                          getWidth() - getWidth() * 0.2,
-                                          getHeight() * 0.8);
-
+    juce::Rectangle<int> thumbnailBounds (getWidth() * 0.025,
+                                          getHeight() * 0.4,
+                                          getWidth() - getWidth() * 0.05,
+                                          getHeight() * 0.5);
+    
+    g.setColour(juce::Colour::fromRGB(47, 54, 64).darker(1.0));
+    auto height = 0.3;
+    g.drawLine(0, getHeight() * height, getWidth(), getHeight() * height, 1.0);
+    
     if (thumbnail.getNumChannels() == 0)
         paintIfNoFileLoaded (g, thumbnailBounds);
     else
@@ -64,20 +72,32 @@ void SamplePlayerComp::paintIfFileLoaded (juce::Graphics& g, const juce::Rectang
     g.setColour (juce::Colours::transparentBlack);
     g.fillRect (thumbnailBounds);
 
-    //g.setColour (juce::Colour::fromRGB(179, 55, 113).withAlpha(0.8f));
     g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(172, 67, 237), getHeight(), juce::Colour::fromRGB(90, 182, 223), getHeight() * 0.4));
 
+    /**Draw waveform*/
+    auto audioLength = (float) thumbnail.getTotalLength();
+    
     thumbnail.drawChannels (g,
-                            thumbnailBounds.withSizeKeepingCentre(thumbnailBounds.getWidth() * 0.9, thumbnailBounds.getHeight() * 0.9),
+                            thumbnailBounds,
                             0.0,
-                            thumbnail.getTotalLength(),
+                            audioLength,
                             1.0f);
+    
+    /**Playhead line color*/
+    g.setColour (juce::Colours::whitesmoke.withAlpha(0.1f));
+     
+    /**Draw playhead*/
+    auto audioPosition = (float) audioProcessor.transportSource.getCurrentPosition();
+    auto drawPosition = (audioPosition / audioLength) * (float) thumbnailBounds.getWidth()
+                                + (float) thumbnailBounds.getX();
+    g.drawLine (drawPosition, (float) thumbnailBounds.getY(), drawPosition,
+                        (float) thumbnailBounds.getBottom(), 2.0f);
 }
 
 void SamplePlayerComp::resized()
 {
-    const auto buttonX = getWidth() * 0.0125;
-    const auto buttonY = getHeight() * 0.17;
+    const auto buttonX = getWidth() * 0.265;
+    const auto buttonY = getHeight() * 0.08;
     const auto buttonWidth = getWidth() * 0.075;
     const auto buttonHeight = buttonWidth * 0.5;
     const auto spaceBetween = 1.3;
@@ -86,16 +106,20 @@ void SamplePlayerComp::resized()
                       buttonY,
                       buttonWidth,
                       buttonHeight);
-    playBtn.setBounds(buttonX,
-                      openBtn.getY() + openBtn.getHeight() * spaceBetween,
+    playBtn.setBounds(openBtn.getX() + openBtn.getWidth() * spaceBetween,
+                      buttonY,
                       buttonWidth,
                       buttonHeight);
-    loopBtn.setBounds(buttonX,
-                       playBtn.getY() + playBtn.getHeight() * spaceBetween,
+    loopBtn.setBounds(playBtn.getX() + playBtn.getWidth() * spaceBetween,
+                      buttonY,
                        buttonWidth,
                        buttonHeight);
-    stopBtn.setBounds(buttonX,
-                      loopBtn.getY() + loopBtn.getHeight() * spaceBetween,
+    stopBtn.setBounds(loopBtn.getX() + loopBtn.getWidth() * spaceBetween,
+                      buttonY,
+                      buttonWidth,
+                      buttonHeight);
+    exportBtn.setBounds(stopBtn.getX() + stopBtn.getWidth() * spaceBetween,
+                        buttonY,
                       buttonWidth,
                       buttonHeight);
 }
@@ -225,11 +249,12 @@ void SamplePlayerComp::initButtons(juce::TextButton &btn, const juce::String btn
     const auto alpha = 0.5f;
     addAndMakeVisible(btn);
     btn.setButtonText(btnText);
-    btn.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
-    btn.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
-    btn.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
-    btn.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
-    btn.setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
+    btn.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::transparentBlack);
+    btn.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::transparentBlack);
+    btn.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(90, 182, 223));
+    btn.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(90, 182, 223));
+    btn.setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(172, 67, 237).withAlpha(alpha));
+    btn.setLookAndFeel(&customTextButton);
 }
 
 void SamplePlayerComp::setButtonEvents()
@@ -248,15 +273,7 @@ void SamplePlayerComp::setButtonEvents()
  
             if (file != juce::File{})
             {
-                auto* reader = formatManager.createReaderFor (file);
- 
-                if (reader != nullptr)
-                {
-                    auto newSource = std::make_unique<juce::AudioFormatReaderSource> (reader, true);
-                    transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);
-                    thumbnail.setSource (new juce::FileInputSource (file));
-                    readerSource.reset (newSource.release());
-                }
+                loadFile(file);
             }
         });
     };
@@ -294,4 +311,13 @@ void SamplePlayerComp::setButtonEvents()
         if (audioProcessor.readerSource == nullptr) return;
         audioProcessor.readerSource->setLooping(loopBtn.getToggleState());
     };
+}
+
+void SamplePlayerComp::cleanMemory()
+{
+    openBtn.setLookAndFeel(nullptr);
+    playBtn.setLookAndFeel(nullptr);
+    loopBtn.setLookAndFeel(nullptr);
+    stopBtn.setLookAndFeel(nullptr);
+    exportBtn.setLookAndFeel(nullptr);
 }

@@ -100,12 +100,12 @@ Button* CustomFileBrowserLAF::createFileBrowserGoUpButton()
     auto* goUpButton = new DrawableButton ("up", DrawableButton::ImageOnButtonBackground);
 
     const auto brighter = 1.0;
-    const auto alpha = 0.5f;
+    const auto alpha = 0.25f;
     goUpButton->setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
     goUpButton->setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
-    goUpButton->setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
-    goUpButton->setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
-    goUpButton->setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
+    goUpButton->setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(90, 182, 223));
+    goUpButton->setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(90, 182, 223));
+    goUpButton->setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(alpha));
     
     Path arrowPath;
     arrowPath.addArrow ({ 50.0f, 100.0f, 50.0f, 0.0f }, 40.0f, 100.0f, 50.0f);
@@ -129,14 +129,14 @@ void CustomFileBrowserLAF::layoutFileBrowserComponent (FileBrowserComponent& bro
     const auto brighter = 1.0;
     const auto alpha = 0.9f;
     setColour(juce::ListBox::ColourIds::backgroundColourId, juce::Colours::transparentBlack);
-    setColour(juce::ListBox::ColourIds::outlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
-    setColour(juce::DirectoryContentsDisplayComponent::ColourIds::textColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
+    setColour(juce::ListBox::ColourIds::outlineColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(0.25f));
+    setColour(juce::DirectoryContentsDisplayComponent::ColourIds::textColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(0.25f));
     
-    filenameBox->setColour(juce::TextEditor::ColourIds::outlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
+    filenameBox->setColour(juce::TextEditor::ColourIds::outlineColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(0.25f));
     filenameBox->setColour(juce::TextEditor::ColourIds::textColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
-    filenameBox->setColour(juce::TextEditor::ColourIds::focusedOutlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.25f));
+    filenameBox->setColour(juce::TextEditor::ColourIds::focusedOutlineColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(0.5f));
     
-    currentPathBox->setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
+    currentPathBox->setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(0.25f));
     currentPathBox->setColour(juce::ComboBox::ColourIds::arrowColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
     currentPathBox->setColour(juce::ComboBox::ColourIds::textColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
     

@@ -16,30 +16,31 @@ SampleExplorerAudioProcessorEditor::SampleExplorerAudioProcessorEditor (SampleEx
 , samplePlayerComp(audioProcessor)
 , headerComp(audioProcessor)
 {
-    sampleDropShadow.radius = 24;
-    sampleDropShadow.offset = juce::Point<int> (-1, 4);
-    sampleDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
-    
-    sampleDropShadower = std::make_unique<juce::DropShadower>(sampleDropShadow);
-    sampleDropShadower->setOwner(&samplePlayerComp);
-    
-    headerDropShadow.radius = 16;
-    headerDropShadow.offset = juce::Point<int> (-1, 4);
-    headerDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
-    
-    headerDropShadower = std::make_unique<juce::DropShadower>(headerDropShadow);
-    headerDropShadower->setOwner(&headerComp);
-    
-    fileDropShadow.radius = 16;
-    fileDropShadow.offset = juce::Point<int> (-1, 4);
-    fileDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
-    
-    fileDropShadower = std::make_unique<juce::DropShadower>(fileDropShadow);
-    fileDropShadower->setOwner(&fileListComp);
+//    sampleDropShadow.radius = 24;
+//    sampleDropShadow.offset = juce::Point<int> (-1, 4);
+//    sampleDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
+//
+//    sampleDropShadower = std::make_unique<juce::DropShadower>(sampleDropShadow);
+//    sampleDropShadower->setOwner(&samplePlayerComp);
+//
+//    headerDropShadow.radius = 16;
+//    headerDropShadow.offset = juce::Point<int> (-1, 4);
+//    headerDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
+//
+//    headerDropShadower = std::make_unique<juce::DropShadower>(headerDropShadow);
+//    headerDropShadower->setOwner(&headerComp);
+//
+//    fileDropShadow.radius = 16;
+//    fileDropShadow.offset = juce::Point<int> (-1, 4);
+//    fileDropShadow.colour = juce::Colours::black.withAlpha(0.5f);
+//
+//    fileDropShadower = std::make_unique<juce::DropShadower>(fileDropShadow);
+//    fileDropShadower->setOwner(&fileListComp);
     
     addAndMakeVisible(fileListComp);
     addAndMakeVisible(samplePlayerComp);
     addAndMakeVisible(headerComp);
+    addAndMakeVisible(effectsComp);
     initWindow();
 }
 
@@ -50,26 +51,29 @@ SampleExplorerAudioProcessorEditor::~SampleExplorerAudioProcessorEditor()
 //==============================================================================
 void SampleExplorerAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::black.brighter(0.1));
+    g.fillAll(juce::Colour::fromRGB(47, 54, 64).darker(1.0));
     //g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.85f), getHeight(), juce::Colour::fromRGB(40, 42, 53).brighter(0.02), getHeight() * 0.4));
    // g.fillRect(getLocalBounds());
 }
 
 void SampleExplorerAudioProcessorEditor::resized()
 {
-    const auto fileX = getWidth() * 0.02;
-    const auto fileY = getHeight() * 0.18;
-    const auto fileWidth = getHeight() * 0.5;
-    const auto fileHeight = getHeight() * 0.8;
+    const auto fileX = 4;
+    //const auto fileX = getWidth() * 0.02;
+    const auto fileY = getHeight() * 0.09 + 4;
+    const auto fileWidth = getWidth() * 0.33;
+    const auto fileHeight = getHeight() * 0.91 - 8;
     fileListComp.setBounds(fileX, fileY, fileWidth, fileHeight);
     
-    const auto leftPad = fileListComp.getX() + fileListComp.getWidth() * 1.1;
-    const auto sampleWidth = getWidth() * 0.68;
-    const auto sampleY = getHeight() * 0.63;
-    const auto sampleHeight = getHeight()  * 0.35;
+    const auto leftPad = fileListComp.getX() + fileListComp.getWidth() + 4;
+    const auto sampleWidth = getWidth() * 0.67 - 12;
+    const auto sampleY = getHeight() * 0.65;
+    const auto sampleHeight = getHeight() * 0.35 - 4;
     samplePlayerComp.setBounds(leftPad, sampleY, sampleWidth, sampleHeight);
     
-    headerComp.setBounds(0, 0, getWidth(), getHeight() * 0.11);
+    headerComp.setBounds(0, 0, getWidth(), fileY - 4);
+    
+    effectsComp.setBounds(samplePlayerComp.getX(), fileListComp.getY(), samplePlayerComp.getWidth(), getHeight() * 0.56 - 8);
 }
 
 void SampleExplorerAudioProcessorEditor::initWindow()
@@ -92,7 +96,7 @@ void SampleExplorerAudioProcessorEditor::initWindow()
         width = x * 0.35;
     }
     
-    auto height = width * 0.35;
+    auto height = width * 0.5;
     
     //Making the window resizable by aspect ratio and setting size
     AudioProcessorEditor::setResizable(true, true);

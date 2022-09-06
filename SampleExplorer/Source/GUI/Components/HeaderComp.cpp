@@ -25,7 +25,7 @@ HeaderComp::~HeaderComp()
 
 void HeaderComp::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black.brighter(0.1));
+    g.fillAll(juce::Colour::fromRGB(30, 39, 46).withAlpha(0.5f));
 }
 
 void HeaderComp::resized()

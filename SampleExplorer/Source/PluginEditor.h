@@ -13,6 +13,7 @@
 #include "GUI/Components/FileListComp.h"
 #include "GUI/Components/SamplePlayerComp.h"
 #include "GUI/Components/HeaderComp.h"
+#include "GUI/Components/EffectsComp.h"
 
 //==============================================================================
 /**
@@ -38,6 +39,7 @@ private:
     SamplePlayerComp samplePlayerComp;
     juce::StringArray fileName;
     HeaderComp headerComp;
+    EffectsComp effectsComp;
     
     std::unique_ptr<juce::DropShadower> sampleDropShadower;
     juce::DropShadow sampleDropShadow;
