@@ -42,7 +42,8 @@ SamplePlayerComp::~SamplePlayerComp()
 
 void SamplePlayerComp::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromRGB(39, 60, 117).withAlpha(0.5f));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.35f), getHeight(), juce::Colour::fromRGB(40, 42, 53).darker(0.15f), getHeight() * 0.4));
+    g.fillRect(getLocalBounds());
     
     juce::Rectangle<int> thumbnailBounds (getWidth() * 0.025,
                                           getHeight() * 0.4,
@@ -172,15 +173,12 @@ void SamplePlayerComp::changeState(TransportState newState)
             case Stopped:
                 
                 // Turn of export so we don't write forever
-//                if (exportToggle.getToggleState() == true)
-//                {
-//                    // Turn of export so we don't write forever
-//                    exportToggle.triggerClick();
-//
-//                    // Auto save when the sample is done playing
-//                    purchaseButton.triggerClick();
-//                }
-//
+                if (exportBtn.getToggleState() == true)
+                {
+                    // Turn of export so we don't write forever
+                    exportBtn.triggerClick();
+                }
+                
                 playBtn.setButtonText ("Play");
                 stopBtn.setButtonText ("Reset");
                 stopBtn.setEnabled (false);
@@ -215,24 +213,39 @@ void SamplePlayerComp::changeState(TransportState newState)
 
 void SamplePlayerComp::loadFile(const juce::File &file)
 {
-    auto* reader = formatManager.createReaderFor (file);
-    
-    if (file.existsAsFile() && reader != nullptr)
+    if (state == Stopped || state == Paused)
     {
-        /**Create reader source*/
-        std::unique_ptr<juce::AudioFormatReaderSource> newSource (new juce::AudioFormatReaderSource (reader, true));
+        audioProcessor.droppedFile = file;
+        audioProcessor.tempFileToWrite = audioProcessor.sampleSaveLocation.getChildFile("temp.wav");
+        auto* reader = formatManager.createReaderFor (audioProcessor.droppedFile);
         
-        /**Set the player's source in the audio processor to the reader source*/
-        audioProcessor.transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);
+        if (file.existsAsFile() && reader != nullptr)
+        {
+            /**Create reader source*/
+            std::unique_ptr<juce::AudioFormatReaderSource> newSource (new juce::AudioFormatReaderSource (reader, true));
+            
+            /**Set the player's source in the audio processor to the reader source*/
+            audioProcessor.transportSource.setSource (newSource.get(), 0, nullptr, reader->sampleRate);
+            
+            /**Enable play button*/
+            playBtn.setEnabled (true);
+            
+            /**Tell the thumbnail to use the reader source for its data*/
+            thumbnail.setSource (new juce::FileInputSource (audioProcessor.droppedFile));
+            
+            /**Reset the reader source for its next use*/
+            audioProcessor.readerSource.reset (newSource.release());
+            
+        }
         
-        /**Enable play button*/
-        playBtn.setEnabled (true);
+        audioProcessor.tempFileToWrite.deleteFile();
         
-        /**Tell the thumbnail to use the reader source for its data*/
-        thumbnail.setSource (new juce::FileInputSource (file));
-        
-        /**Reset the reader source for its next use*/
-        audioProcessor.readerSource.reset (newSource.release());
+        audioProcessor.writer.reset (audioProcessor.format.createWriterFor (new juce::FileOutputStream (audioProcessor.tempFileToWrite),
+                                                                            audioProcessor.getSampleRate(),
+                                                                            2,
+                                                                            24,
+                                                                            {},
+                                                                            0));
     }
     
     else
@@ -241,24 +254,25 @@ void SamplePlayerComp::loadFile(const juce::File &file)
         
         alertWindow->showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "Error!", "There was an error with either the file you tried to load or the format, please verify that the file is valid.");
     }
+    
 }
 
 void SamplePlayerComp::initButtons(juce::TextButton &btn, const juce::String btnText)
 {
-    const auto brighter = 1.0;
-    const auto alpha = 0.5f;
+    const auto alpha = 0.25f;
     addAndMakeVisible(btn);
     btn.setButtonText(btnText);
     btn.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colours::transparentBlack);
-    btn.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colours::transparentBlack);
+    btn.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colour::fromRGB(90, 182, 223).withAlpha(alpha));
     btn.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(90, 182, 223));
     btn.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(90, 182, 223));
-    btn.setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(172, 67, 237).withAlpha(alpha));
+    btn.setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(alpha));
     btn.setLookAndFeel(&customTextButton);
 }
 
 void SamplePlayerComp::setButtonEvents()
 {
+    // Open
     openBtn.onClick = [this]()
     {
         chooser = std::make_unique<juce::FileChooser> ("Select a Wave file to play...",
@@ -278,6 +292,7 @@ void SamplePlayerComp::setButtonEvents()
         });
     };
     
+    // Play
     playBtn.onClick = [this]()
     {
         if (state == Stopped || state == Paused)
@@ -291,6 +306,7 @@ void SamplePlayerComp::setButtonEvents()
         }
     };
     
+    // Stop
     stopBtn.onClick = [this]()
     {
         if (state == Paused)
@@ -304,12 +320,89 @@ void SamplePlayerComp::setButtonEvents()
         }
     };
     
+    // Loop
     loopBtn.setClickingTogglesState(true);
     
     loopBtn.onClick = [this]()
     {
         if (audioProcessor.readerSource == nullptr) return;
         audioProcessor.readerSource->setLooping(loopBtn.getToggleState());
+    };
+    
+    // Export
+    exportBtn.setClickingTogglesState(true);
+    exportBtn.onClick = [this]()
+    {
+            // If the file isn't valid, break out of click event
+        if (!audioProcessor.sampleSaveLocation.exists())
+        {
+            
+            alertWindow = std::make_unique<juce::AlertWindow>("Error!", "You didn't set a save location in the settings menu!.", juce::MessageBoxIconType::WarningIcon);
+            
+            alertWindow->showMessageBoxAsync(juce::MessageBoxIconType::WarningIcon, "Error!", "You didn't set a save location in the settings menu!.");
+                
+                // Turn off export button so we don't get the above message twice
+            exportBtn.setToggleState(false, juce::dontSendNotification);
+                
+            return;
+        }
+        
+        if (audioProcessor.readerSource == nullptr)
+        {
+            return;
+        }
+            
+        if (exportBtn.getToggleState() == true)
+        {
+            if (loopBtn.getToggleState() == true)
+            {
+                loopBtn.setToggleState(false, juce::dontSendNotification);
+            }
+                
+            // Turn off looping
+            audioProcessor.readerSource->setLooping(false);
+                
+            // Disable loop button
+            loopBtn.setEnabled(false);
+                
+            // Enable exporting
+            audioProcessor.exportEnabled.store(true);
+                
+            // Auto start so that we don't record silence
+            playBtn.triggerClick();
+        }
+            
+        else
+        {
+            audioProcessor.writer.reset();
+            
+            // Disable exporting so it doesn't write forever
+            audioProcessor.exportEnabled.store(false);
+                
+            // Re-enable the loop button
+            loopBtn.setEnabled(true);
+                
+            // Reset the transport position
+            audioProcessor.transportSource.setPosition(0.0);
+                
+            // Auto reset
+            stopBtn.triggerClick();
+            
+            // Stop the audio during save*/
+            if (playBtn.getToggleState())
+            {
+                playBtn.triggerClick();
+            }
+            
+            // Save the file to the saved location*/
+            auto targetFileProcessed = audioProcessor.sampleSaveLocation.getChildFile("processed_" + audioProcessor.droppedFile.getFileName());
+            
+            // Save a dry and processed version of the file*/
+            audioProcessor.tempFileToWrite.copyFileTo(targetFileProcessed);
+            
+            // Delete temp
+            audioProcessor.sampleSaveLocation.getChildFile("temp.wav").deleteFile();
+        }
     };
 }
 

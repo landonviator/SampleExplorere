@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "../../PluginProcessor.h"
+#include "../LookAndFeel/TextButtonLAF.h"
 
 //==============================================================================
 /*
@@ -34,6 +35,8 @@ private:
     std::unique_ptr<juce::AlertWindow> settingsDialog;
     void setSettingsBtnProps();
     void initButtons(juce::TextButton &btn, const juce::String btnText);
+    juce::CustomTextButton customTextButton;
+    void cleanMemory();
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HeaderComp)
 };

@@ -21,6 +21,7 @@ HeaderComp::HeaderComp(SampleExplorerAudioProcessor& p) : audioProcessor(p)
 
 HeaderComp::~HeaderComp()
 {
+    cleanMemory();
 }
 
 void HeaderComp::paint (juce::Graphics& g)
@@ -51,9 +52,7 @@ void HeaderComp::setSettingsBtnProps()
         {
             if (chooser->getResult().exists())
             {
-                audioProcessor.sampleSaveLocation = chooser->getResult();
-                
-                DBG(audioProcessor.sampleSaveLocation.getFullPathName());
+                audioProcessor.location = chooser->getResult();
                 
                 audioProcessor.variableTree.setProperty("sampleSaveLocation", audioProcessor.sampleSaveLocation.getFullPathName(), nullptr);
             }
@@ -68,13 +67,18 @@ void HeaderComp::setSettingsBtnProps()
 
 void HeaderComp::initButtons(juce::TextButton &btn, const juce::String btnText)
 {
-    const auto brighter = 1.0;
     const auto alpha = 0.5f;
     addAndMakeVisible(btn);
     btn.setButtonText(btnText);
     btn.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
     btn.setColour(juce::TextButton::ColourIds::buttonOnColourId, juce::Colour::fromRGB(59, 59, 152).withAlpha(0.0f));
-    btn.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
-    btn.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(alpha));
-    btn.setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(40, 42, 53).brighter(brighter).withAlpha(0.125f));
+    btn.setColour(juce::TextButton::ColourIds::textColourOnId, juce::Colour::fromRGB(90, 182, 223));
+    btn.setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colour::fromRGB(90, 182, 223));
+    btn.setColour(juce::ComboBox::ColourIds::outlineColourId, juce::Colour::fromRGB(210, 218, 226).withAlpha(alpha));
+    btn.setLookAndFeel(&customTextButton);
+}
+
+void HeaderComp::cleanMemory()
+{
+    settingsBtn.setLookAndFeel(nullptr);
 }

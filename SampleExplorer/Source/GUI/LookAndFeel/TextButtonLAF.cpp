@@ -38,5 +38,10 @@ namespace juce
 
         g.setColour (button.findColour (ComboBox::outlineColourId));
         g.drawRoundedRectangle (bounds, cornerSize, 1.5f);
-}
+    }
+
+    Font CustomTextButton::getTextButtonFont (TextButton&, int buttonHeight)
+    {
+        return Font ("Helvetica", static_cast<float>(buttonHeight) * 0.5f, juce::Font::FontStyleFlags::bold);
+    }
 }

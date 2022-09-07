@@ -25,7 +25,8 @@ EffectsComp::~EffectsComp()
 
 void EffectsComp::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromRGB(39, 60, 117).withAlpha(0.5f));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.15f), getHeight(), juce::Colour::fromRGB(40, 42, 53).brighter(0.02), getHeight() * 0.4));
+    g.fillRect(getLocalBounds());
 }
 
 void EffectsComp::resized()

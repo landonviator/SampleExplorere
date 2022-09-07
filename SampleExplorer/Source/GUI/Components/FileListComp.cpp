@@ -23,7 +23,7 @@ FileListComp::FileListComp(SamplePlayerComp& s, SampleExplorerAudioProcessor& p)
    
     else
     {
-        location = audioProcessor.sampleRoot.getFullPathName();
+        location = audioProcessor.variableTree.getProperty("sampleRoot");
     }
     
     fileBrowserComp = std::make_unique<juce::FileBrowserComponent>(5, location.getFullPathName(), &sampleExplorerFilter, nullptr);
@@ -44,7 +44,8 @@ FileListComp::~FileListComp()
 
 void FileListComp::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromRGB(39, 60, 117).withAlpha(0.5f));
+    g.setGradientFill(juce::ColourGradient::vertical(juce::Colour::fromRGB(40, 42, 53).darker(0.35f), getHeight(), juce::Colour::fromRGB(40, 42, 53).brighter(0.02), getHeight() * 0.4));
+    g.fillRect(getLocalBounds());
 }
 
 void FileListComp::resized()

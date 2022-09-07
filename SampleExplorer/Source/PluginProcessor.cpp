@@ -34,11 +34,21 @@ SampleExplorerAudioProcessor::SampleExplorerAudioProcessor()
           }
         }
       };
+    
+    exportEnabled.store(false);
 }
 
 SampleExplorerAudioProcessor::~SampleExplorerAudioProcessor()
 {
     transportSource.setSource(nullptr);
+    
+    // Delete temp file if the user didn't save anything to it
+    auto leftOverFile = juce::File(sampleSaveLocation.getChildFile("temp.wav"));
+    
+    if (leftOverFile.existsAsFile())
+    {
+        leftOverFile.deleteFile();
+    }
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout SampleExplorerAudioProcessor::createParameterLayout()
@@ -166,6 +176,32 @@ void SampleExplorerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
     else
     {
         transportSource.getNextAudioBlock (channelInfo);
+    }
+    
+    auto channelBuffers = buffer.getArrayOfWritePointers();
+        
+    for (auto sample {0}; sample < buffer.getNumSamples(); sample++)
+    {
+        for (auto channel {0}; channel < buffer.getNumChannels(); channel++)
+        {
+            channelBuffers[channel][sample] *= 0.1;
+        }
+    }
+    
+    // Write audio while the export button is on
+    if (exportEnabled.load())
+    {
+        // File is already loaded into the writer on the gui side
+        writeBufferToFile(buffer);
+    }
+}
+
+void SampleExplorerAudioProcessor::writeBufferToFile(juce::AudioBuffer<float>& buffer)
+{
+    if (writer != nullptr)
+    {
+        DBG("Writing");
+        writer->writeFromAudioSampleBuffer (buffer, 0, buffer.getNumSamples());
     }
 }
 

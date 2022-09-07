@@ -23,5 +23,7 @@ namespace juce
                                    const Colour& backgroundColour,
                                    bool shouldDrawButtonAsHighlighted,
                                    bool shouldDrawButtonAsDown) override;
+        
+        Font getTextButtonFont (TextButton&, int buttonHeight) override;
     };
 }

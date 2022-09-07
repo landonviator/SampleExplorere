@@ -65,7 +65,12 @@ public:
 
     juce::AudioTransportSource transportSource;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
-    juce::File sampleSaveLocation, sampleRoot;
+    juce::File sampleSaveLocation, sampleRoot, tempFileToWrite, droppedFile, tempFile, location;
+    
+    juce::WavAudioFormat format;
+    std::unique_ptr<juce::AudioFormatWriter> writer;
+    void writeBufferToFile(juce::AudioBuffer<float>& buffer);
+    std::atomic<bool> exportEnabled;
     
 private:
     //==============================================================================
